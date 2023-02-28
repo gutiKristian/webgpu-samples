@@ -1,0 +1,1 @@
+import shader from "./shaders.wgsl";
