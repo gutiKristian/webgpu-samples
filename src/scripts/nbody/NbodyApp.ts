@@ -1,10 +1,10 @@
-import { Application } from "../../Application";
+import { GPU } from "../../GPU";
 
 export class NBodyApp
 {
-    private application: Application;
+    private application: GPU;
 
-    constructor(app: Application) 
+    constructor(app: GPU) 
     {
         this.application = app;
     }

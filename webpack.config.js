@@ -3,7 +3,7 @@ const path = require("path");
 module.exports = {
     context: __dirname,
     entry: {
-        main:"./src/main.ts",
+        simpleTriangle:"./src/scripts/simpleTriangle/main.ts",
     },
 
     output: {

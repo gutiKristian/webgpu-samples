@@ -1,5 +1,11 @@
-import { Application } from "../../Application";
-import { SimpleTriangle } from "./BasicTriangle";
+import { GPU } from "../../GPU";
+import { SimpleTriangle } from "./SimpleTriangle";
 
-const app = await Application.build();
-const program = new SimpleTriangle(app);
+const main = async() => 
+{
+    const gpu = await GPU.build();
+    const program = new SimpleTriangle(gpu);
+    program.render();
+}
+
+main(); 

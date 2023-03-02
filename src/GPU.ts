@@ -1,14 +1,11 @@
 import shader from "./shaders.wgsl";
 
-/*
-    Init Adapter and Device.
-    GPUAdapter: 
-*/
-export class Application
+
+export class GPU
 {
 
-    readonly adapter: GPUAdapter;
-    readonly device: GPUDevice;
+    public readonly adapter: GPUAdapter;
+    public readonly device: GPUDevice;
 
     private constructor(adapter: GPUAdapter, device: GPUDevice) 
     {
@@ -16,8 +13,7 @@ export class Application
         this.device = device;
     }
 
-    
-    listGPUInfo(): void {
+    public listGPUInfo(): void {
         
         if (!this.adapter)
         {
@@ -30,7 +26,7 @@ export class Application
     }
 
     // 'Builder'
-    public static async build(): Promise<Application>
+    public static async build(): Promise<GPU>
     {
         if (!navigator.gpu)
         {
@@ -41,7 +37,7 @@ export class Application
 
         const device = await adapter?.requestDevice() as GPUDevice;
 
-        return new Application(adapter, device);
+        return new GPU(adapter, device);
     }
     
 }
