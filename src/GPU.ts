@@ -30,6 +30,7 @@ export class GPU
     {
         if (!navigator.gpu)
         {
+            alert("WebGPU is not enabled!");
             throw new Error("This browser does not support the WebGPU");
         }
 
