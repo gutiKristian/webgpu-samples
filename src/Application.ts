@@ -1,5 +1,9 @@
 import shader from "./shaders.wgsl";
 
+/*
+    Init Adapter and Device.
+    GPUAdapter: 
+*/
 export class Application
 {
 
@@ -12,6 +16,20 @@ export class Application
         this.device = device;
     }
 
+    
+    listGPUInfo(): void {
+        
+        if (!this.adapter)
+        {
+            console.log("Adapter has not been initialized.");
+            console.log("Check if the WebGPU flag is enabled.");
+        }
+
+        const info = this.adapter.requestAdapterInfo();
+        console.log(info);
+    }
+
+    // 'Builder'
     public static async build(): Promise<Application>
     {
         if (!navigator.gpu)
@@ -25,6 +43,5 @@ export class Application
 
         return new Application(adapter, device);
     }
-
     
 }
