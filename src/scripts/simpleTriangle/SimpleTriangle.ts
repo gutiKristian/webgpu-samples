@@ -1,11 +1,11 @@
-import { GPU } from "../../GPU";
+import { GPUSetup } from "../../GPUSetup.ts";
 import { Program } from "../Program";
 
 export class SimpleTriangle extends Program
 {
     private readonly PROGRAM_NAME: string = "SIMPLE TRIANGLE";
 
-    constructor(gpu: GPU)
+    constructor(gpu: GPUSetup)
     {
         super(gpu);
     }

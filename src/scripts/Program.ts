@@ -1,4 +1,4 @@
-import { GPU } from "../GPU";
+import { GPUSetup } from "../GPUSetup.ts";
 
 /*
     This is general program that is not meant to be instantiated.
@@ -6,9 +6,9 @@ import { GPU } from "../GPU";
  */
 export abstract class Program
 {
-    protected readonly gpu: GPU;
+    protected readonly gpu: GPUSetup;
     
-    protected constructor(gpu: GPU)
+    protected constructor(gpu: GPUSetup)
     {
         this.gpu = gpu;
     }
