@@ -1,18 +1,17 @@
-import { GPUSetup } from "../GPUSetup.ts";
+import { GPUSetup } from "../GPUSetup";
 
 /*
     This is general program that is not meant to be instantiated.
-    Every new program that is implemented should extend this class and implement it.
+    Every new program that is implemented should implement this interface.
  */
-export abstract class Program
+export interface Program
 {
-    protected readonly gpu: GPUSetup;
-    
-    protected constructor(gpu: GPUSetup)
-    {
-        this.gpu = gpu;
-    }
+    readonly gpu: GPUSetup;
+    readonly pipeline: GPURenderPipeline;
+    readonly bindGroup: GPUBindGroup;
 
-    abstract render(): void;
+    configurePipeline(): [GPURenderPipeline, GPUBindGroup];
+
+    render(): void;
 
 }
