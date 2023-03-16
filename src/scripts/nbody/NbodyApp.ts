@@ -1,11 +1,24 @@
 import { GPUSetup } from "../../GPUSetup";
+import { Program } from "../Program";
 
-export class NBodyApp
+export class NBodyApp implements Program
 {
-    private application: GPUSetup;
+    private readonly PROGRAM_NAME: string = "NBODY APP";
 
-    constructor(app: GPUSetup) 
+    readonly gpu: GPUSetup;
+    readonly pipeline: GPURenderPipeline;
+    readonly bindGroup: GPUBindGroup;
+
+    constructor(gpu: GPUSetup) 
     {
-        this.application = app;
+        this.gpu = gpu;
+        [this.pipeline, this.bindGroup] = this.configurePipeline();
+        console.log("Running:", this.PROGRAM_NAME);        
+    }
+    configurePipeline(): [GPURenderPipeline, GPUBindGroup] {
+        throw new Error("Method not implemented.");
+    }
+    render(): void {
+        throw new Error("Method not implemented.");
     }
 }
