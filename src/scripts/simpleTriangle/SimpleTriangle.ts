@@ -1,11 +1,11 @@
 import { GPUSetup } from "../../GPUSetup";
-import { Program } from "../Program";
+import { P_GPUPipeline, Program } from "../Program";
 import simpleTriangle from "../../shaders/simpleTriangle.wgsl";
 
 export class SimpleTriangle implements Program
 {
     readonly gpu: GPUSetup;
-    readonly pipeline: GPURenderPipeline;
+    readonly pipeline: P_GPUPipeline;
     readonly bindGroup: GPUBindGroup;
 
     private readonly PROGRAM_NAME: string = "SIMPLE TRIANGLE";
@@ -18,7 +18,7 @@ export class SimpleTriangle implements Program
     }
 
 
-    configurePipeline(): [GPURenderPipeline, GPUBindGroup] {
+    configurePipeline(): [P_GPUPipeline, GPUBindGroup] {
         
         const device = this.gpu.device;
         const format = this.gpu.format;
@@ -61,7 +61,7 @@ export class SimpleTriangle implements Program
             layout: pipelineLayout
         });
 
-        return [pipeline, bindGroup];
+        return [{render: pipeline}, bindGroup];
     }
 
 
@@ -80,7 +80,7 @@ export class SimpleTriangle implements Program
                 storeOp: "store"
             }]
         });
-        renderpass.setPipeline(this.pipeline);
+        renderpass.setPipeline(this.pipeline.render!);
         renderpass.setBindGroup(0, this.bindGroup)
         renderpass.draw(3, 1, 0, 0);
         renderpass.end();
