@@ -4,6 +4,7 @@ module.exports = {
     context: __dirname,
     entry: {
         simpleTriangle:"./src/scripts/simpleTriangle/main.ts",
+        cubeIndexBuffer: "./src/scripts/cubeIndexBuffer/main.ts"
     },
 
     output: {
