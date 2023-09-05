@@ -3,6 +3,7 @@ const path = require("path");
 module.exports = {
     context: __dirname,
     entry: {
+        mainPageGpuInfo: "./src/scripts/mainPageGpuInfo/main.ts",
         simpleTriangle:"./src/scripts/simpleTriangle/main.ts",
         cubeIndexBuffer: "./src/scripts/cubeIndexBuffer/main.ts"
     },
@@ -34,6 +35,10 @@ module.exports = {
 
     resolve: {
         extensions: [".ts"]
+    },
+
+    experiments: {
+        topLevelAwait: true
     }
 
 }
