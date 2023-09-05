@@ -8,7 +8,7 @@ export class GPUSetup
 
     //* A GPUDevice encapsulates a device and exposes the functionality of that device
     public readonly device: GPUDevice;
-    
+
     public readonly canvas: HTMLCanvasElement;
     public readonly context: GPUCanvasContext;
     public readonly format: GPUTextureFormat;
@@ -31,17 +31,6 @@ export class GPUSetup
 
     }
 
-    public listGPUInfo(): void {
-        
-        if (!this.adapter)
-        {
-            console.log("Adapter has not been initialized.");
-            console.log("Check if the WebGPU flag is enabled.");
-        }
-
-        const info = this.adapter.requestAdapterInfo();
-        console.log(info);
-    }
 
     // 'Builder'
     public static async build(canvasName: string): Promise<GPUSetup>
