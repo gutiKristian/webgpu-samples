@@ -2,9 +2,13 @@ import shader from "./shaders.wgsl";
 
 export class GPUSetup
 {
-
+    
+    //* A GPUAdapter encapsulates an adapter, and describes its capabilities (features and limits).    
     public readonly adapter: GPUAdapter;
+
+    //* A GPUDevice encapsulates a device and exposes the functionality of that device
     public readonly device: GPUDevice;
+    
     public readonly canvas: HTMLCanvasElement;
     public readonly context: GPUCanvasContext;
     public readonly format: GPUTextureFormat;
