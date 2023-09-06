@@ -9,8 +9,13 @@ export class GPUSetup
     //* A GPUDevice encapsulates a device and exposes the functionality of that device
     public readonly device: GPUDevice;
 
+    //* Canvas where we draw the geometry
     public readonly canvas: HTMLCanvasElement;
+
+    //* Context that is associated with device
     public readonly context: GPUCanvasContext;
+
+    //* Format in which textures are stored, automatically selected by WebGPU
     public readonly format: GPUTextureFormat;
 
     private constructor(adapter: GPUAdapter, device: GPUDevice, canvas: HTMLCanvasElement) 
@@ -19,7 +24,7 @@ export class GPUSetup
         this.device = device;
         this.canvas = canvas;
         this.context = <GPUCanvasContext> canvas.getContext("webgpu");
-        this.format = "bgra8unorm";
+        this.format = navigator.gpu.getPreferredCanvasFormat();
 
         // Configuring context might change in the future -- this is default GPUCanvasConfiguration
         this.context.configure({
