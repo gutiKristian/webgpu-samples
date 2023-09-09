@@ -5,7 +5,8 @@ module.exports = {
     entry: {
         mainPageGpuInfo: "./src/scripts/mainPageGpuInfo/main.ts",
         simpleTriangle:"./src/scripts/simpleTriangle/main.ts",
-        cubeIndexBuffer: "./src/scripts/cubeIndexBuffer/main.ts"
+        cubeIndexBuffer: "./src/scripts/cubeIndexBuffer/main.ts",
+        googleFirstWebGpu: "./src/scripts/googleFirstWebGpu/main.ts"
     },
 
     output: {
