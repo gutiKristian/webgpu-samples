@@ -18,6 +18,8 @@ export class GPUSetup
     //* Format in which textures are stored, automatically selected by WebGPU
     public readonly format: GPUTextureFormat;
 
+    public readonly encoder: GPUCommandEncoder;
+
     private constructor(adapter: GPUAdapter, device: GPUDevice, canvas: HTMLCanvasElement) 
     {
         this.adapter = adapter;
@@ -32,7 +34,8 @@ export class GPUSetup
             format: this.format,
             alphaMode: "opaque"
         });
-
+        
+        this.encoder = this.device.createCommandEncoder();
 
     }
 
