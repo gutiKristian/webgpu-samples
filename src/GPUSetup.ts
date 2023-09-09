@@ -6,7 +6,7 @@ export class GPUSetup
     //* A GPUAdapter encapsulates an adapter, and describes its capabilities (features and limits).    
     public readonly adapter: GPUAdapter;
 
-    //* A GPUDevice encapsulates a device and exposes the functionality of that device
+    //* A GPUDevice encapsulates a device and exposes the functionality of that device (Interface), most of the interaction with GPU
     public readonly device: GPUDevice;
 
     //* Canvas where we draw the geometry
