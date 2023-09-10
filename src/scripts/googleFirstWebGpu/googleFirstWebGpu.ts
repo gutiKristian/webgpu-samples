@@ -10,6 +10,17 @@ export class GoogleFirstWebGpu implements Program
 
     private readonly PROGRAM_NAME: string = "Google example";
 
+    private vertices = new Float32Array([
+        //   X,    Y,
+          -0.8, -0.8, // Triangle 1 (Blue)
+           0.8, -0.8,
+           0.8,  0.8,
+        
+          -0.8, -0.8, // Triangle 2 (Red)
+           0.8,  0.8,
+          -0.8,  0.8,
+    ]);
+
     constructor(gpu: GPUSetup)
     {
         this.gpu = gpu;
@@ -22,6 +33,24 @@ export class GoogleFirstWebGpu implements Program
         
         const device = this.gpu.device;
         const format = this.gpu.format;
+
+
+        const vertexBuffer = device.createBuffer({
+            label: "Cell vertices", //* Labels are used in error messages so it is good to use them!
+            size: this.vertices.byteLength,
+            usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
+        });
+
+        device.queue.writeBuffer(vertexBuffer, /*bufferOffset=*/0, this.vertices);
+        
+        const vertexBufferLayout = {
+            arrayStride: 8,
+            attributes: [{
+              format: "float32x2",
+              offset: 0,
+              shaderLocation: 0, // Position, see vertex shader
+            }],
+        };
 
         const bindGroupLayout = device.createBindGroupLayout({
             entries: [],
