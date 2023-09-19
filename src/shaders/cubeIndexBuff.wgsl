@@ -17,7 +17,8 @@ struct Fragment
 @vertex
 fn vs_main(@location(0) vertex_pos: vec3<f32>, @location(1) vertex_col: vec3<f32>) -> Fragment // vertex shader main
 {
-    var out: Fragment; // Perspective        Camera              World coordinates
+    var out: Fragment;
+                     // Perspective        Camera              World coordinates
     out.Position = transformUBO.projection * transformUBO.view * transformUBO.model * vec4<f32>(vertex_pos, 1.0);
     out.Color = vec4<f32>(vertex_col, 1.0);
     return out;
