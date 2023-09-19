@@ -1,6 +1,6 @@
 import { GPUSetup } from "../../GPUSetup";
 import { P_GPUPipeline, Program } from "../Program";
-import simpleTriangle from "../../shaders/simpleTriangle.wgsl";
+import googleExample from "../../shaders/googleExample.wgsl";
 
 export class GoogleFirstWebGpu implements Program
 {
@@ -21,6 +21,8 @@ export class GoogleFirstWebGpu implements Program
           -0.8,  0.8,
     ]);
 
+    private vertexBuffer: GPUBuffer | undefined;
+
     constructor(gpu: GPUSetup)
     {
         this.gpu = gpu;
@@ -35,15 +37,15 @@ export class GoogleFirstWebGpu implements Program
         const format = this.gpu.format;
 
 
-        const vertexBuffer = device.createBuffer({
+        this.vertexBuffer = device.createBuffer({
             label: "Cell vertices", //* Labels are used in error messages so it is good to use them!
             size: this.vertices.byteLength,
             usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
         });
 
-        device.queue.writeBuffer(vertexBuffer, /*bufferOffset=*/0, this.vertices);
+        device.queue.writeBuffer(this.vertexBuffer, /*bufferOffset=*/0, this.vertices);
         
-        const vertexBufferLayout = {
+        const vertexBufferLayout: GPUVertexBufferLayout  = {
             arrayStride: 8,
             attributes: [{
               format: "float32x2",
@@ -52,6 +54,7 @@ export class GoogleFirstWebGpu implements Program
             }],
         };
 
+        ////////
         const bindGroupLayout = device.createBindGroupLayout({
             entries: [],
         });
@@ -61,22 +64,22 @@ export class GoogleFirstWebGpu implements Program
             entries: []
         });
         
-        const pipelineLayout = device.createPipelineLayout({
-            bindGroupLayouts: [bindGroupLayout]
+
+        ////////
+
+        const cellShaderModule: GPUShaderModule = device.createShaderModule({
+            code: googleExample
         });
-    
-        const pipeline = device.createRenderPipeline({
+
+        const pipeline: GPURenderPipeline = device.createRenderPipeline({
             vertex : {
-                module : device.createShaderModule({
-                    code : simpleTriangle
-                }),
-                entryPoint : "vs_main"
+                module : cellShaderModule,
+                entryPoint : "vs_main",
+                buffers: [vertexBufferLayout]
             },
     
             fragment : {
-                module : device.createShaderModule({
-                    code : simpleTriangle
-                }),
+                module : cellShaderModule,
                 entryPoint : "fs_main",
                 targets : [{
                     format : format
@@ -87,7 +90,7 @@ export class GoogleFirstWebGpu implements Program
                 topology : "triangle-list"
             },
     
-            layout: pipelineLayout
+            layout: "auto"
         });
 
         return [{render: pipeline}, bindGroup];
@@ -119,6 +122,9 @@ export class GoogleFirstWebGpu implements Program
             }]
         });
        
+        pass.setPipeline(this.pipeline.render!);
+        pass.setVertexBuffer(0, this.vertexBuffer!);
+        pass.draw(this.vertices.length / 2); // 6 vertices
         pass.end();
 
         const commandBuffer = commandEncoder.finish();
