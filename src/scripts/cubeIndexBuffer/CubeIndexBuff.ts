@@ -180,8 +180,8 @@ export class CubeIndexBuff implements Program
     {
         const device = this.gpu.device;
         const context = this.gpu.context;
-        const commandEncoder = this.gpu.encoder;
-
+        const commandEncoder = device.createCommandEncoder({label: "My encoder"});
+        
         const textureView : GPUTextureView = context.getCurrentTexture().createView();
         const renderpass : GPURenderPassEncoder = commandEncoder.beginRenderPass({
             colorAttachments: [{
@@ -198,7 +198,9 @@ export class CubeIndexBuff implements Program
         renderpass.drawIndexed(36);
         renderpass.end();
 
-        device.queue.submit([commandEncoder.finish()]);
+        const commandBuffer = commandEncoder.finish();
+
+        device.queue.submit([commandBuffer]);
 
         requestAnimationFrame(this.render);
     }

@@ -8,4 +8,4 @@ const main = async() =>
     program.render();
 }
 
-main(); 
+main();

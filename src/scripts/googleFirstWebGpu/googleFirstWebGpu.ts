@@ -98,7 +98,7 @@ export class GoogleFirstWebGpu implements Program
     {
         const device = this.gpu.device;
         const context = this.gpu.context;
-        const commandEncoder = this.gpu.encoder;
+        const commandEncoder = device.createCommandEncoder();
         
         //* Render pass --> where all drawing operations
         const pass = commandEncoder.beginRenderPass({

@@ -70,7 +70,7 @@ export class SimpleTriangle implements Program
     {
         const device = this.gpu.device;
         const context = this.gpu.context;
-        const commandEncoder = this.gpu.encoder;
+        const commandEncoder = device.createCommandEncoder();
         
         const textureView : GPUTextureView = context.getCurrentTexture().createView();
         const renderpass : GPURenderPassEncoder = commandEncoder.beginRenderPass({
