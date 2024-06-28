@@ -1,13 +1,13 @@
 import { GPUSetup } from "../../GPUSetup";
-import { P_GPUPipeline, Program } from "../Program";
+import { Program } from "../Program";
 import shader from "../../shaders/cubeIndexBuff.wgsl";
 import { mat4 } from "gl-matrix";
 
 export class CubeIndexBuff implements Program
 {
     readonly gpu: GPUSetup;
-    readonly pipeline: P_GPUPipeline;
-    readonly bindGroup: GPUBindGroup;
+    pipeline: GPURenderPipeline | undefined;
+    bindGroup: GPUBindGroup | undefined;
 
     private readonly PROGRAM_NAME: string = "CUBE INDEX";
     private vertexBuffer: GPUBuffer | undefined;
@@ -17,12 +17,12 @@ export class CubeIndexBuff implements Program
     constructor(gpu: GPUSetup)
     {
         this.gpu = gpu;
-        [this.pipeline, this.bindGroup] = this.configurePipeline();
+        this.configurePipeline();
         console.log("Program: ", this.PROGRAM_NAME);
     }
 
 
-    configurePipeline(): [P_GPUPipeline, GPUBindGroup] {
+    configurePipeline(): void {
         
         const device = this.gpu.device;
         const format = this.gpu.format;
@@ -118,7 +118,7 @@ export class CubeIndexBuff implements Program
         device.queue.writeBuffer(this.uniformBuffer, 64, <ArrayBuffer>view);
         device.queue.writeBuffer(this.uniformBuffer, 128, <ArrayBuffer>projection);
 
-        //! Setup render pipeline
+        // Setup render pipeline
         const bindGroupLayout = device.createBindGroupLayout({
             entries: [
                 {
@@ -171,7 +171,8 @@ export class CubeIndexBuff implements Program
             layout: pipelineLayout
         });
 
-        return [{render: pipeline}, bindGroup];
+        this.pipeline = pipeline;
+        this.bindGroup = bindGroup;
     }
 
 
@@ -190,8 +191,8 @@ export class CubeIndexBuff implements Program
                 storeOp: "store"
             }]
         });
-        renderpass.setPipeline(this.pipeline.render!);
-        renderpass.setBindGroup(0, this.bindGroup);
+        renderpass.setPipeline(this.pipeline!);
+        renderpass.setBindGroup(0, this.bindGroup!);
         renderpass.setVertexBuffer(0, this.vertexBuffer!);
         renderpass.setIndexBuffer(this.indexBuffer!, "uint16");
         renderpass.drawIndexed(36);

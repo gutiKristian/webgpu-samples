@@ -1,12 +1,12 @@
 import { GPUSetup } from "../../GPUSetup";
-import { P_GPUPipeline, Program } from "../Program";
+import { Program } from "../Program";
 import googleExample from "../../shaders/googleExample.wgsl";
 
 export class GoogleFirstWebGpu implements Program
 {
     readonly gpu: GPUSetup;
-    readonly pipeline: P_GPUPipeline;
-    readonly bindGroup: GPUBindGroup;
+    pipeline: GPURenderPipeline | undefined;
+    bindGroup: GPUBindGroup | undefined;
 
     private readonly PROGRAM_NAME: string = "Google example";
 
@@ -26,12 +26,12 @@ export class GoogleFirstWebGpu implements Program
     constructor(gpu: GPUSetup)
     {
         this.gpu = gpu;
-        [this.pipeline, this.bindGroup] = this.configurePipeline();
+        this.configurePipeline();
         console.log("Program: ", this.PROGRAM_NAME);
     }
 
 
-    configurePipeline(): [P_GPUPipeline, GPUBindGroup] {
+    configurePipeline(): void {
         
         const device = this.gpu.device;
         const format = this.gpu.format;
@@ -54,7 +54,6 @@ export class GoogleFirstWebGpu implements Program
             }],
         };
 
-        ////////
         const bindGroupLayout = device.createBindGroupLayout({
             entries: [],
         });
@@ -64,9 +63,6 @@ export class GoogleFirstWebGpu implements Program
             entries: []
         });
         
-
-        ////////
-
         const cellShaderModule: GPUShaderModule = device.createShaderModule({
             code: googleExample
         });
@@ -92,8 +88,9 @@ export class GoogleFirstWebGpu implements Program
     
             layout: "auto"
         });
-
-        return [{render: pipeline}, bindGroup];
+        
+        this.pipeline = pipeline;
+        this.bindGroup = bindGroup;
     }
 
 
@@ -122,7 +119,7 @@ export class GoogleFirstWebGpu implements Program
             }]
         });
        
-        pass.setPipeline(this.pipeline.render!);
+        pass.setPipeline(this.pipeline!);
         pass.setVertexBuffer(0, this.vertexBuffer!);
         pass.draw(this.vertices.length / 2); // 6 vertices
         pass.end();

@@ -1,5 +1,5 @@
 import { GPUSetup } from "../../GPUSetup";
-import { P_GPUPipeline, Program } from "../Program";
+import { Program } from "../Program";
 import nbodyCompute from "../../shaders/NBodyCompute.wgsl";
 
 export class NBodyApp implements Program
@@ -7,16 +7,16 @@ export class NBodyApp implements Program
     private readonly PROGRAM_NAME: string = "NBODY APP";
 
     readonly gpu: GPUSetup;
-    readonly pipeline: P_GPUPipeline;
-    readonly bindGroup: GPUBindGroup;
+    pipeline: GPUComputePipeline | undefined;
+    bindGroup: GPUBindGroup | undefined;
 
     constructor(gpu: GPUSetup) 
     {
         this.gpu = gpu;
-        [this.pipeline, this.bindGroup] = this.configurePipeline();
+        this.configurePipeline();
         console.log("Running:", this.PROGRAM_NAME);        
     }
-    configurePipeline(): [P_GPUPipeline, GPUBindGroup] {
+    configurePipeline(): void {
         const device = this.gpu.device;
         const format = this.gpu.format;
         //! NOT FINISHED
@@ -56,7 +56,7 @@ export class NBodyApp implements Program
 
 
 
-        return [{compute: computePipeline}, bindGroup];
+        this.pipeline = computePipeline;
         
     }
     render(): void {
@@ -65,7 +65,7 @@ export class NBodyApp implements Program
 
         const commandEncoder: GPUCommandEncoder = device.createCommandEncoder();
         const passEncoder: GPUComputePassEncoder = commandEncoder.beginComputePass();
-        passEncoder.setPipeline(this.pipeline.compute!);
+        passEncoder.setPipeline(this.pipeline!);
         passEncoder.dispatchWorkgroups(1);
         passEncoder.end();
         const commands: GPUCommandBuffer = commandEncoder.finish();
