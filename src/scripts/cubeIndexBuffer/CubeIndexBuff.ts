@@ -14,6 +14,9 @@ export class CubeIndexBuff implements Program
     private indexBuffer: GPUBuffer | undefined;
     private uniformBuffer: GPUBuffer | undefined;
 
+    private depthTexture?: GPUTexture;
+
+
     constructor(gpu: GPUSetup)
     {
         this.gpu = gpu;
@@ -27,6 +30,13 @@ export class CubeIndexBuff implements Program
         const device = this.gpu.device;
         const format = this.gpu.format;
         
+
+        this.depthTexture = device.createTexture({
+            size: [this.gpu.canvas.width, this.gpu.canvas.height],
+            format: 'depth24plus',
+            usage: GPUTextureUsage.RENDER_ATTACHMENT
+        });
+
         //! Vertex buffer
         // cube
         const vertices: Float32Array = new Float32Array(
@@ -167,6 +177,12 @@ export class CubeIndexBuff implements Program
             primitive : {
                 topology : "triangle-list"
             },
+
+            depthStencil: {
+                depthWriteEnabled: true,
+                depthCompare: 'less',
+                format: 'depth24plus',
+              },
     
             layout: pipelineLayout
         });
@@ -182,6 +198,14 @@ export class CubeIndexBuff implements Program
         const context = this.gpu.context;
         const commandEncoder = device.createCommandEncoder({label: "My encoder"});
         
+        const model = mat4.create();
+        mat4.identity(model);
+        const angle = (Date.now() / 1000);
+        mat4.rotate(model, model, Math.sin(angle), [1, 1, 0]);
+
+        device.queue.writeBuffer(this.uniformBuffer!, 0, <ArrayBuffer>model);
+
+
         const textureView : GPUTextureView = context.getCurrentTexture().createView();
         const renderpass : GPURenderPassEncoder = commandEncoder.beginRenderPass({
             colorAttachments: [{
@@ -189,7 +213,13 @@ export class CubeIndexBuff implements Program
                 clearValue: {r: 0.5, g: 0.4, b: 0.3, a: 1.0},
                 loadOp: "clear",
                 storeOp: "store"
-            }]
+            }],
+            depthStencilAttachment: {
+                view: this.depthTexture!.createView(),
+                depthClearValue: 1.0,
+                depthLoadOp: 'clear',
+                depthStoreOp: 'store'
+            }
         });
         renderpass.setPipeline(this.pipeline!);
         renderpass.setBindGroup(0, this.bindGroup!);
